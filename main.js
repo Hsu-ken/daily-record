@@ -4,29 +4,30 @@ const path = require('path')
 
 const tasklist = require('tasklist')
 
-  (async () => {
-    return await tasklist();
+// (async () => {
+//   var dict = { verbose: true };
 
-    /*
-    [{
-      imageName: 'taskhostex.exe',
-      pid: 1820,
-      sessionName: 'Console',
-      sessionNumber: 1,
-      memUsage: 4415488
-    }, …]
-    */
-  }).then(function (value) { console.log(value) });
+//   console.log(await tasklist({ verbose: true }));
 
-// var _ = require('lodash');
-// var ps = require('current-processes');
 
-// ps.get(function (err, processes) {
+//   /*
+//   [{
+//     imageName: 'taskhostex.exe',
+//     pid: 1820,
+//     sessionName: 'Console',
+//     sessionNumber: 1,
+//     memUsage: 4415488
+//   }, …]
+//   */
+// })
+// .then(function (value) {
 
-//   var sorted = _.sortBy(processes, 'cpu');
-//   var top5 = sorted.reverse().splice(0, 20);
+//   let count = 0
 
-//   console.log(top5);
+//   console.log(value)
+
+
+//   // console.log(count)
 // });
 
 function createWindow() {
@@ -47,18 +48,25 @@ function createWindow() {
   // mainWindow.webContents.openDevTools()
 }
 
+async function creatTaskList() {
+
+  console.log(await tasklist({ verbose: true }));
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow()
-
+  creatTaskList()
   app.on('activate', function () {
+
+
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    sleep(30000)
-    task.then(function (value) { console.log(value) })
+
+
   })
 })
 
