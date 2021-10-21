@@ -4,6 +4,15 @@ const path = require('path')
 
 const tasklist = require('tasklist')
 
+const Shell = require('node-powershell');
+
+
+const ps = new Shell({
+  executionPolicy: 'Bypass',
+  noProfile: true
+});
+
+
 // (async () => {
 //   var dict = { verbose: true };
 
@@ -49,8 +58,23 @@ function createWindow() {
 }
 
 async function creatTaskList() {
+  // var a = "吃翔翔";
+  // var unicodeJsonA = JSON.stringify(a);　　//unicode
+  // console.log(unicodeJsonA)
+  // var jsonA = eval(unicodeJsonA);
+  // console.log(jsonA);
 
-  console.log(await tasklist({ verbose: true }));
+  ps.addCommand('gps | where {$_.MainWindowTitle } |Format-Table -Property ProcessName');
+  ps.invoke()
+    .then(output => {
+      // console.log(JSON.stringify(output));
+      // console.log(JSON.parse(JSON.stringify(output)))
+      console.log(output);
+
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 
 // This method will be called when Electron has finished
