@@ -5,7 +5,9 @@ const path = require('path')
 const tasklist = require('tasklist')
 
 const Shell = require('node-powershell');
+const { time } = require('console');
 
+var Promise = require('promise');
 
 const ps = new Shell({
   executionPolicy: 'Bypass',
@@ -45,7 +47,8 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true
     }
   })
 
@@ -77,19 +80,30 @@ async function creatTaskList() {
     });
 }
 
+async function loopTime(sec) {
+  sec = sec * 1000
+  return new Promise(resolve => setTimeout(resolve, sec));
+
+}
+async function loop() {
+  while (true) {
+    await loopTime(5)
+    creatTaskList()
+  }
+}
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow()
   creatTaskList()
+  loop()
   app.on('activate', function () {
 
 
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
-
 
   })
 })
