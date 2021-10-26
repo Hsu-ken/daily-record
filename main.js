@@ -6,39 +6,20 @@ const tasklist = require('tasklist')
 
 const Shell = require('node-powershell');
 const { time } = require('console');
-
+const timeMemory = require('./time-memory.js')
 var Promise = require('promise');
+
+// timeMemory.read();
 
 const ps = new Shell({
   executionPolicy: 'Bypass',
   noProfile: true
 });
 
-
-// (async () => {
-//   var dict = { verbose: true };
-
-//   console.log(await tasklist({ verbose: true }));
-
-
-//   /*
-//   [{
-//     imageName: 'taskhostex.exe',
-//     pid: 1820,
-//     sessionName: 'Console',
-//     sessionNumber: 1,
-//     memUsage: 4415488
-//   }, …]
-//   */
-// })
-// .then(function (value) {
-
-//   let count = 0
-
-//   console.log(value)
-
-
-//   // console.log(count)
+// fs.readFile('time-data.json', (err, data) => {
+//   if (err) throw err;
+//   let student = JSON.parse(data);
+//   console.log(student.ss);
 // });
 
 function createWindow() {
@@ -70,9 +51,30 @@ async function creatTaskList() {
   ps.addCommand('gps | where {$_.MainWindowTitle } |Format-Table -Property ProcessName');
   ps.invoke()
     .then(output => {
-      // console.log(JSON.stringify(output));
-      // console.log(JSON.parse(JSON.stringify(output)))
-      console.log(output);
+      let processData = []
+      var os = require('os');
+
+
+
+      // console.log(output)
+      let outputSpilt = []
+      outputSpilt = output.split(os.EOL);
+
+
+      console.log(outputSpilt[0]);
+      for (let i = 0; i < outputSpilt.length; i++) {
+        process = outputSpilt[i]
+
+        var reg = /[_a-zA-Z]/;
+
+        if (reg.test(process[0]) && process != "ProcessName" && process != '')
+          processData.push(process)
+      };
+
+
+      console.log(processData);
+      timeMemory.read(processData)
+      // timeMemory.read();
 
     })
     .catch(err => {
@@ -99,6 +101,7 @@ app.whenReady().then(() => {
   creatTaskList()
   loop()
   app.on('activate', function () {
+
 
 
     // On macOS it's common to re-create a window in the app when the

@@ -22,6 +22,7 @@
   "dependencies": {
     "current-processes": "^0.2.1",
     "node-powershell": "^4.0.0",
+    "promise": "^8.1.0",
     "tasklist": "^4.0.0"
   }
 }
